@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <string name="app_name" translatable="false">MNFST Test</string>
+  <string name="open_camera_button">Open Camera</string>
+  <string name="account_review_button">Account review</string>
+  <string name="manual_recognitioin_button">Manual image recognition</string>
+  <string name="manual_moderation_button">Manual image moderation</string>
+</resources>
