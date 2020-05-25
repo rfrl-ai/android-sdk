@@ -9,3 +9,6 @@ build/
 # Android Studio
 local.properties
 captures/
+
+# Project specific
+google-services.json

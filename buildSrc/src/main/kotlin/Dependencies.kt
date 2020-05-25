@@ -3,7 +3,7 @@
 object Versions {
   object Kotlin {
     const val LANGUAGE = "1.4-M1"
-    const val COROUTINES = "1.3.5"
+    const val COROUTINES = "1.3.7"
   }
 
   object Build {
@@ -20,8 +20,9 @@ object Versions {
   }
 
   object AppCompat {
-    const val APP_COMPAT = "1.2.0-beta01"
-    const val ACTIVITY = "1.2.0-alpha04"
+    const val CORE = "1.4.0-alpha01"
+    const val APP_COMPAT = "1.3.0-alpha01"
+    const val ACTIVITY = "1.2.0-alpha05"
     const val RECYCLER = "1.2.0-alpha03"
     const val CONSTRAINT_LAYOUT = "2.0.0-beta2"
     const val MATERIAL = "1.2.0-alpha06"
@@ -33,7 +34,7 @@ object Versions {
   }
 
   object Network {
-    const val RETROFIT = "2.8.1"
+    const val RETROFIT = "2.9.0"
     const val LOGGING_INTERCEPTOR = "4.4.1"
   }
 

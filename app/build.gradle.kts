@@ -48,6 +48,7 @@ android {
 
   // Drop some garbage from the final APK
   packagingOptions {
+    exclude("DebugProbesKt.bin")
     exclude("**.properties")
     exclude("kotlin/**")
     exclude("okhttp3/internal/publicsuffix/NOTICE")
@@ -86,6 +87,8 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.Kotlin.COROUTINES}")
 
   // Support libs
+  implementation("androidx.core:core:${Versions.AppCompat.CORE}")
+  implementation("androidx.core:core-ktx:${Versions.AppCompat.CORE}")
   implementation("androidx.appcompat:appcompat:${Versions.AppCompat.APP_COMPAT}")
   implementation("androidx.activity:activity:${Versions.AppCompat.ACTIVITY}")
   implementation("androidx.recyclerview:recyclerview:${Versions.AppCompat.RECYCLER}")
