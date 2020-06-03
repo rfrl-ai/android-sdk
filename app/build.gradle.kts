@@ -18,8 +18,8 @@ android {
 
     resConfigs("en", "ru")
 
-    versionCode = 1
-    versionName = "1.0.$versionCode"
+    versionCode = 9
+    versionName = "1.1.$versionCode"
   }
 
   sourceSets {
@@ -64,7 +64,7 @@ android {
   }
 
   // Enable data binding
-  dataBinding.isEnabled = true
+  buildFeatures.dataBinding = true
   
   compileOptions.sourceCompatibility = JavaVersion.VERSION_1_8
   compileOptions.targetCompatibility = JavaVersion.VERSION_1_8
@@ -87,13 +87,9 @@ dependencies {
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.Kotlin.COROUTINES}")
 
   // Support libs
-  implementation("androidx.core:core:${Versions.AppCompat.CORE}")
-  implementation("androidx.core:core-ktx:${Versions.AppCompat.CORE}")
   implementation("androidx.appcompat:appcompat:${Versions.AppCompat.APP_COMPAT}")
-  implementation("androidx.activity:activity:${Versions.AppCompat.ACTIVITY}")
   implementation("androidx.recyclerview:recyclerview:${Versions.AppCompat.RECYCLER}")
   implementation("androidx.constraintlayout:constraintlayout:${Versions.AppCompat.CONSTRAINT_LAYOUT}")
-  implementation("com.google.android.material:material:${Versions.AppCompat.MATERIAL}")
 
   // Firebase ML
   implementation("com.google.firebase:firebase-ml-vision:${Versions.ML.VISION}")
@@ -107,7 +103,6 @@ dependencies {
 
   // Utils
   implementation("org.koin:koin-android:${Versions.Utils.KOIN}")
-  //noinspection(GradleDependency)
   implementation("com.squareup.picasso:picasso:${Versions.Utils.PICASSO}")
   implementation("com.jakewharton.picasso:picasso2-okhttp3-downloader:${Versions.Utils.PICASSO_DOWNLOADER}")
   implementation("com.google.android.exoplayer:exoplayer-core:${Versions.Utils.EXO_PLAYER}")

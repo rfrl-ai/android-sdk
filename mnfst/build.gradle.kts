@@ -1,2 +1,2 @@
 configurations.maybeCreate("default")
-artifacts.add("default", file("mnfst-saas-1.1.7.0edaedd-prod-release.aar"))
+artifacts.add("default", file("mnfst-saas-1.1.9.68f62ae-prod-release.aar"))

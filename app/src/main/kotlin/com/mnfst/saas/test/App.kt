@@ -19,7 +19,7 @@ class App : Application() {
 
     val config = createMnfstInitConfig()
 
-    // Initialization is asynchronous,  its safe to do it on app startup
+    // Initialization is asynchronous, its safe to do it on app startup
     MnfstSdk.init(config) {
       if (it.status != MnfstInitStatus.SUCCESS) {
         Log.e("App", "Failed to initialize MNFST SDK: ${it.status}")
