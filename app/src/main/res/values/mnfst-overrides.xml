@@ -17,16 +17,4 @@
   <integer name="mnfst_camera_suggest_face_size_max_feed">60</integer>
   <integer name="mnfst_camera_suggest_face_size_min_story">10</integer>
   <integer name="mnfst_camera_suggest_face_size_max_story">45</integer>
-
-  <!-- Video benchmark -->
-
-  <!-- Number of passes -->
-  <integer name="mnfst_benchmark_passes">1</integer>
-
-  <!-- Max average runtime for all passes -->
-  <integer name="mnfst_benchmark_max_avg_runtime_sec">10</integer>
-
-  <!-- URLs of sample media which used in benchmark -->
-  <string name="mnfst_benchmark_photo_url" translatable="false">https://mnfst-static.s3.amazonaws.com/benchmark/stories_sample_photo.jpg</string>
-  <string name="mnfst_benchmark_video_url" translatable="false">https://mnfst-static.s3.amazonaws.com/benchmark/stories_video.mp4</string>
 </resources>

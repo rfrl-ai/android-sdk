@@ -5,16 +5,17 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.mnfst.saas.sdk.MnfstApi
 import com.mnfst.saas.sdk.MnfstContext
-import com.mnfst.saas.sdk.MnfstCreateVideoSite
 import com.mnfst.saas.sdk.MnfstGenerationStatus
 import com.mnfst.saas.sdk.MnfstModerationStatus
 import com.mnfst.saas.sdk.MnfstRecognitionStatus
 import com.mnfst.saas.sdk.MnfstSdk
-import kotlinx.android.synthetic.main.activity_main.*
+import com.mnfst.saas.test.databinding.ActivityMainBinding
 import java.io.File
 
 
 class MainActivity : AppCompatActivity() {
+  private lateinit var binding: ActivityMainBinding
+
   private fun MnfstApi.dumpMnfstObject() =
       if (BuildConfig.DEBUG)
          MnfstSdk.getDebugInterface().dumpObject(this)
@@ -22,11 +23,11 @@ class MainActivity : AppCompatActivity() {
         ""
 
   private fun showProgress() {
-    progressBar.visibility = View.VISIBLE
+    binding.progressBar.visibility = View.VISIBLE
   }
 
   private fun hideProgress() {
-    progressBar.visibility = View.GONE
+    binding.progressBar.visibility = View.GONE
   }
 
   private fun finishOperation(ctx: MnfstContext) {
@@ -54,13 +55,10 @@ class MainActivity : AppCompatActivity() {
   }
 
   private fun generateCreative(ctx: MnfstContext) {
-    // If user selected video mask, we prepare video locally.
-    // Its good idea to perform video benchmark first, so you will know whether the current
-    // device is enough powerful to deal with FFMPEG locally.
-    // For slow devices its recommended to run video generation on the MNFST cloud.
+    // If user selected video mask, we prepare video on the MNFST servers.
     // Generation site is valid for video creatives only and ignored for images.
 
-    ctx.startCreativeGeneration(MnfstCreateVideoSite.LOCAL) {
+    ctx.startCreativeGeneration {
       "Creative generation finished with result status: ${it.status}".log()
       it.dumpMnfstObject().log()
 
@@ -190,21 +188,22 @@ class MainActivity : AppCompatActivity() {
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    setContentView(R.layout.activity_main)
+    binding = ActivityMainBinding.inflate(layoutInflater)
+    setContentView(binding.root)
 
-    openCameraButton.setOnClickListener {
+    binding.openCameraButton.setOnClickListener {
       openCamera()
     }
 
-    accountReviewButton.setOnClickListener {
+    binding.accountReviewButton.setOnClickListener {
       startAccountReview()
     }
 
-    manualRecognitionButton.setOnClickListener {
+    binding.manualRecognitionButton.setOnClickListener {
       startManualImageRecognition()
     }
 
-    manualModerationButton.setOnClickListener {
+    binding.manualModerationButton.setOnClickListener {
       startManualImageModeration()
     }
   }

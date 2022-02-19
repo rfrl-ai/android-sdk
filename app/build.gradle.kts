@@ -1,25 +1,24 @@
 plugins {
   id("com.android.application")
-  id("kotlin-android")
+  kotlin("android")
+  kotlin("kapt")
   id("kotlin-android-extensions")
-  id("kotlin-kapt")
   id("com.google.gms.google-services")
 }
 
-
 android {
-  compileSdkVersion(Versions.Android.COMPILE)
-
+  compileSdk = Versions.Android.COMPILE
   defaultConfig {
     applicationId = "com.mnfst.saas.test"
 
-    minSdkVersion(Versions.Android.MIN)
-    targetSdkVersion(Versions.Android.TARGET)
+    minSdk = Versions.Android.MIN
+    targetSdk = Versions.Android.TARGET
 
-    resConfigs("en", "ru")
+    resourceConfigurations += "en"
+    resourceConfigurations += "ru"
 
-    versionCode = 9
-    versionName = "1.1.$versionCode"
+    versionCode = 11
+    versionName = "1.2.$versionCode"
   }
 
   sourceSets {
@@ -48,23 +47,16 @@ android {
 
   // Drop some garbage from the final APK
   packagingOptions {
-    exclude("DebugProbesKt.bin")
-    exclude("**.properties")
-    exclude("kotlin/**")
-    exclude("okhttp3/internal/publicsuffix/NOTICE")
-    exclude("META-INF/**.version")
-    exclude("META-INF/**.kotlin_module")
-    exclude("META-INF/com.android.tools/**")
-
-    // TensorFlow libs are shipped compressed, unpacked on demand
-    exclude("lib/armeabi-v7a/libtensorflowlite_jni.so")
-    exclude("lib/arm64-v8a/libtensorflowlite_jni.so")
-    exclude("lib/x86/libtensorflowlite_jni.so")
-    exclude("lib/x86_64/libtensorflowlite_jni.so")
+    resources.excludes += setOf("DebugProbesKt.bin",
+                                "**.properties",
+                                "kotlin*/**",
+                                "okhttp3/internal/publicsuffix/NOTICE",
+                                "**/**.version",
+                                "**/**.kotlin_module")
   }
 
-  // Enable data binding
-  buildFeatures.dataBinding = true
+  // Enable view binding
+  buildFeatures.viewBinding = true
   
   compileOptions.sourceCompatibility = JavaVersion.VERSION_1_8
   compileOptions.targetCompatibility = JavaVersion.VERSION_1_8
@@ -84,16 +76,15 @@ dependencies {
   // Kotlin
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.Kotlin.LANGUAGE}")
   implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${Versions.Kotlin.COROUTINES}")
-  implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.Kotlin.COROUTINES}")
 
   // Support libs
+  implementation("androidx.core:core-ktx:${Versions.AppCompat.KTX}")
   implementation("androidx.appcompat:appcompat:${Versions.AppCompat.APP_COMPAT}")
   implementation("androidx.recyclerview:recyclerview:${Versions.AppCompat.RECYCLER}")
   implementation("androidx.constraintlayout:constraintlayout:${Versions.AppCompat.CONSTRAINT_LAYOUT}")
 
   // Firebase ML
-  implementation("com.google.firebase:firebase-ml-vision:${Versions.ML.VISION}")
-  implementation("com.google.firebase:firebase-ml-model-interpreter:${Versions.ML.MODEL_INTERPRETER}")
+  implementation("com.google.android.gms:play-services-mlkit-face-detection:${Versions.Utils.FACE_DETECTION}")
 
   // Networking
   implementation("com.squareup.retrofit2:retrofit:${Versions.Network.RETROFIT}")
@@ -102,10 +93,10 @@ dependencies {
   implementation("com.squareup.okhttp3:logging-interceptor:${Versions.Network.LOGGING_INTERCEPTOR}")
 
   // Utils
-  implementation("org.koin:koin-android:${Versions.Utils.KOIN}")
-  implementation("com.squareup.picasso:picasso:${Versions.Utils.PICASSO}")
-  implementation("com.jakewharton.picasso:picasso2-okhttp3-downloader:${Versions.Utils.PICASSO_DOWNLOADER}")
+  implementation("io.insert-koin:koin-android:${Versions.Utils.KOIN}")
+  implementation("io.coil-kt:coil:${Versions.Utils.COIL}")
   implementation("com.google.android.exoplayer:exoplayer-core:${Versions.Utils.EXO_PLAYER}")
+  implementation("com.pocketimps:extlib:${Versions.Utils.EXTLIB}")
   implementation("com.pocketimps:unlzma:${Versions.Utils.UNLZMA}")
   implementation("com.jakewharton.timber:timber:${Versions.Utils.TIMBER}")
 }

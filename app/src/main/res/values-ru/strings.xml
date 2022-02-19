@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
   <!-- Localized strings from MNFST SDK -->
-  <string name="mnfst_camera_loading" tools:ignore="ExtraTranslation">Загрузка…</string>
-  <string name="mnfst_camera_hint" tools:ignore="ExtraTranslation">Используйте естественное освещение и попробуйте разные ракурсы</string>
-  <string name="mnfst_camera_segmentation_hint" tools:ignore="ExtraTranslation">Фоновая картинка появится после того, как вы сделаете фото</string>
-  <string name="mnfst_camera_adjust_hint" tools:ignore="ExtraTranslation">Переместите, приблизьте или отдалите изображение</string>
-  <string name="mnfst_camera_luminance_too_low" tools:ignore="ExtraTranslation">Нужно больше света</string>
-  <string name="mnfst_camera_luminance_too_high" tools:ignore="ExtraTranslation">Слишком светло</string>
-  <string name="mnfst_camera_face_searching" tools:ignore="ExtraTranslation">Лицо не найдено!</string>
-  <string name="mnfst_camera_face_size_too_low" tools:ignore="ExtraTranslation">Лицо слишком далеко</string>
-  <string name="mnfst_camera_face_size_too_high" tools:ignore="ExtraTranslation">Лицо слишком близко</string>
-  <string name="mnfst_camera_no_access_button" tools:ignore="ExtraTranslation">Разрешите доступ к камере</string>
-  <string name="mnfst_camera_done_button" tools:ignore="ExtraTranslation">Готово</string>
-  <string name="mnfst_message_generic_error" tools:ignore="ExtraTranslation">Что-то пошло не так</string>
-  <string name="mnfst_message_storage_permission_missing" tools:ignore="ExtraTranslation">Необходим доступ к галерее</string>
+  <string name="mnfst_camera_loading">Загрузка…</string>
+  <string name="mnfst_camera_hint">Используйте естественное освещение и попробуйте разные ракурсы</string>
+  <string name="mnfst_camera_segmentation_hint">Фоновая картинка появится после того, как вы сделаете фото</string>
+  <string name="mnfst_camera_adjust_hint">Переместите, приблизьте или отдалите изображение</string>
+  <string name="mnfst_camera_luminance_too_low">Нужно больше света</string>
+  <string name="mnfst_camera_luminance_too_high">Слишком светло</string>
+  <string name="mnfst_camera_face_searching">Лицо не найдено!</string>
+  <string name="mnfst_camera_face_size_too_low">Лицо слишком далеко</string>
+  <string name="mnfst_camera_face_size_too_high">Лицо слишком близко</string>
+  <string name="mnfst_camera_no_access_button">Разрешите доступ к камере</string>
+  <string name="mnfst_camera_done_button">Готово</string>
+  <string name="mnfst_message_generic_error">Что-то пошло не так</string>
+  <string name="mnfst_message_storage_permission_missing">Необходим доступ к галерее</string>
 </resources>

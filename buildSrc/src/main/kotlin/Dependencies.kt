@@ -3,44 +3,41 @@
 
 object Versions {
   object Kotlin {
-    const val LANGUAGE = "1.3.72"
-    const val COROUTINES = "1.3.7"
+    const val LANGUAGE = "1.6.10"
+    const val COROUTINES = "1.6.0"
   }
 
   object Build {
-    const val GRADLE_PLUGIN = "4.0.0"
-    const val GMS = "4.3.3"
-    const val R8 = "1.6.84"
+    const val GRADLE_PLUGIN = "7.1.1"
+    const val GMS = "4.3.10"
+    const val R8 = "3.0.73"
   }
 
   object Android {
     const val MIN = 21
-    const val TARGET = 29
+    const val TARGET = 32
     const val COMPILE = TARGET
   }
 
   object AppCompat {
-    const val APP_COMPAT = "1.1.0"
-    const val RECYCLER = "1.1.0"
-    const val CONSTRAINT_LAYOUT = "1.1.3"
-  }
-
-  object ML {
-    const val VISION = "24.0.3"
-    const val MODEL_INTERPRETER = "22.0.3"
+    const val KTX = "1.7.0"
+    const val APP_COMPAT = "1.4.1"
+    const val RECYCLER = "1.2.1"
+    const val CONSTRAINT_LAYOUT = "2.1.3"
   }
 
   object Network {
     const val RETROFIT = "2.9.0"
-    const val LOGGING_INTERCEPTOR = "4.7.2"
+    const val LOGGING_INTERCEPTOR = "4.9.3"
   }
 
   object Utils {
-    const val EXO_PLAYER = "2.11.4"
-    const val PICASSO = "2.5.2"
-    const val PICASSO_DOWNLOADER = "1.1.0"
-    const val KOIN = "2.1.5"
-    const val UNLZMA = "1.0"
-    const val TIMBER = "4.7.1"
+    const val EXO_PLAYER = "2.16.1"
+    const val COIL = "1.4.0"
+    const val KOIN = "3.1.5"
+    const val EXTLIB = "1.0.1"
+    const val UNLZMA = "1.0.1"
+    const val TIMBER = "5.0.1"
+    const val FACE_DETECTION = "16.2.0"
   }
 }

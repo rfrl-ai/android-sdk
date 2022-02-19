@@ -1,9 +1,10 @@
 buildscript {
   repositories {
     google()
-    jcenter()
+    mavenCentral()
+    maven("https://jitpack.io")
     maven("https://dl.bintray.com/android/android-tools")
-    maven("http://storage.googleapis.com/r8-releases/raw")
+    maven("https://storage.googleapis.com/r8-releases/raw")
     maven("https://kotlin.bintray.com/kotlinx")
   }
 
@@ -19,8 +20,7 @@ buildscript {
 allprojects {
   repositories {
     google()
-    jcenter()
+    mavenCentral()
     maven("https://jitpack.io")
-    maven("https://dl.bintray.com/kotlin/kotlin-eap")
   }
 }
