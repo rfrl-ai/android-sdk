@@ -1,42 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-  <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="vertical">
-    <Button
-        android:id="@+id/openCameraButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/open_camera_button"/>
+    android:layout_height="match_parent"
+    android:background="#FFFFFFFF">
+  <Button
+      android:id="@+id/resetContextButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toStartOf="@id/dumpContextButton"
+      android:text="@string/button_reset_context"
+      android:textAllCaps="false"/>
 
-    <Button
-        android:id="@+id/accountReviewButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/account_review_button"/>
+  <Button
+      android:id="@+id/dumpContextButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toEndOf="@id/resetContextButton"
+      app:layout_constraintTop_toTopOf="@id/resetContextButton"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:text="@string/button_dump_context"
+      android:textAllCaps="false"/>
 
-    <Button
-        android:id="@+id/manualRecognitionButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/manual_recognitioin_button"/>
+  <Button
+      android:id="@+id/recognitionButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/resetContextButton"
+      app:layout_constraintEnd_toStartOf="@id/imageModerationButton"
+      android:text="@string/button_recognition"
+      android:textAllCaps="false"/>
 
-    <Button
-        android:id="@+id/manualModerationButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/manual_moderation_button"/>
-  </LinearLayout>
+  <Button
+      android:id="@+id/imageModerationButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toEndOf="@id/recognitionButton"
+      app:layout_constraintTop_toTopOf="@id/recognitionButton"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:text="@string/button_image_moderation"
+      android:textAllCaps="false"/>
+
+  <Button
+      android:id="@+id/accountReviewButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/recognitionButton"
+      app:layout_constraintEnd_toStartOf="@id/imageModerationButton"
+      android:text="@string/button_account_review"
+      android:textAllCaps="false"/>
+
+  <Button
+      android:id="@+id/videoModerationButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toEndOf="@id/accountReviewButton"
+      app:layout_constraintTop_toTopOf="@id/accountReviewButton"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:text="@string/button_video_moderation"
+      android:textAllCaps="false"/>
+
+  <Button
+      android:id="@+id/startCameraButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/accountReviewButton"
+      app:layout_constraintEnd_toStartOf="@id/videoModerationButton"
+      android:text="@string/button_camera"
+      android:textAllCaps="false"/>
+
+  <Button
+      android:id="@+id/generationButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/startCameraButton"
+      app:layout_constraintEnd_toStartOf="@id/videoModerationButton"
+      android:text="@string/button_generation"
+      android:textAllCaps="false"/>
+
+  <Button
+      android:id="@+id/moderationButton"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      app:layout_constraintStart_toEndOf="@id/generationButton"
+      app:layout_constraintTop_toTopOf="@id/generationButton"
+      app:layout_constraintEnd_toEndOf="parent"
+      android:text="@string/button_creative_moderation"
+      android:textAllCaps="false"/>
+
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/consoleOutput"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/generationButton"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      android:scrollbars="vertical"
+      android:fadeScrollbars="false"
+      android:background="#FFF6F6F6"/>
+
+  <ImageView
+      android:id="@+id/shareLogsButton"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="16dp"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      android:src="@drawable/ic_share"
+      android:background="?selectableItemBackground"/>
 
   <FrameLayout
       android:id="@+id/progressBar"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="#20000000"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintBottom_toTopOf="@id/consoleOutput"
+      android:background="#10000000"
       android:elevation="999dp"
       android:clickable="true"
       android:focusable="true"
@@ -47,4 +136,4 @@
         android:layout_gravity="center"
         android:indeterminate="true"/>
   </FrameLayout>
-</FrameLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

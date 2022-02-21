@@ -1,39 +1,27 @@
 package com.mnfst.saas.test
 
 import android.app.Application
-import com.mnfst.saas.sdk.MnfstInitConfig
-import com.mnfst.saas.sdk.MnfstInitStatus
-import com.mnfst.saas.sdk.MnfstSdk
+import com.mnfst.saas.test.util.appModule
+import com.mnfst.saas.test.util.koinContextModule
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.get
+import org.koin.core.context.startKoin
+import org.koin.core.logger.Level
 
 
-class App : Application() {
-  // Create MNFST SDK configuration
-  private fun createMnfstInitConfig(): MnfstInitConfig {
-    val token = getString(R.string.token_mnfst)
-    return MnfstInitConfig(this, token)
-  }
-
+class App : Application(), KoinComponent {
   override fun onCreate() {
     super.onCreate()
 
-    val config = createMnfstInitConfig()
+    // Init DI modules
+    startKoin {
+      printLogger(Level.ERROR)
+      modules(koinContextModule(),
+              appModule)
+    }
 
     // Initialization is asynchronous, its safe to do it on app startup
-    MnfstSdk.init(config) {
-      if (it.status != MnfstInitStatus.SUCCESS) {
-        "Failed to initialize MNFST SDK: ${it.status}".log()
-        throw IllegalStateException()
-      }
-
-      "MNFST SDK is initialized".log()
-
-      // DEV build of MNFST exposes debug interface, so you may tune up it a bit.
-      if (BuildConfig.DEBUG) {
-        val debug = MnfstSdk.getDebugInterface()
-        
-        // Enable additional tracing on camera screen
-        debug.setCameraDebug(true)
-      }
-    }
+    val runner = get<SdkRunner>()
+    runner.initSdk()
   }
 }

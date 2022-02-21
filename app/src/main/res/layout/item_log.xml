@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="4dp"
+    android:paddingEnd="4dp"
+    android:textSize="9sp"
+    android:textColor="#FF000000"
+    android:textColorLink="?colorAccent"
+    android:autoLink="web"
+    android:linksClickable="true"
+    tools:text="Some log entry"/>

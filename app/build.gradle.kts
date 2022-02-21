@@ -17,16 +17,10 @@ android {
     resourceConfigurations += "en"
     resourceConfigurations += "ru"
 
-    versionCode = 11
+    versionCode = 12
     versionName = "1.2.$versionCode"
-  }
 
-  sourceSets {
-    getByName("main").java.srcDir("src/main/kotlin")
-  }
-
-  signingConfigs {
-    create("default") {
+    signingConfig = signingConfigs.create("default") {
       storeFile = File("$projectDir/signing.keystore")
       storePassword = "android"
       keyAlias = "androiddebugkey"
@@ -34,29 +28,13 @@ android {
     }
   }
 
-  buildTypes {
-    getByName("debug") {
-      versionNameSuffix = "-debug"
-      signingConfig = signingConfigs.getByName("default")
-    }
-
-    getByName("release") {
-      signingConfig = signingConfigs.getByName("default")
-    }
-  }
-
-  // Drop some garbage from the final APK
-  packagingOptions {
-    resources.excludes += setOf("DebugProbesKt.bin",
-                                "**.properties",
-                                "kotlin*/**",
-                                "okhttp3/internal/publicsuffix/NOTICE",
-                                "**/**.version",
-                                "**/**.kotlin_module")
+  sourceSets {
+    getByName("main").java.srcDir("src/main/kotlin")
   }
 
   // Enable view binding
   buildFeatures.viewBinding = true
+  lint.checkReleaseBuilds = false
   
   compileOptions.sourceCompatibility = JavaVersion.VERSION_1_8
   compileOptions.targetCompatibility = JavaVersion.VERSION_1_8
@@ -65,11 +43,9 @@ android {
 
 
 dependencies {
-  // Dev SDK with debug interface
-  debugImplementation(project(":mnfst-dev"))
-
-  // Release SDK
-  releaseImplementation(project(":mnfst"))
+  // MNFST SDK. ":mnfst-dev" provides debug interface
+  //implementation(project(":mnfst"))
+  implementation(project(":mnfst-dev"))
 
   // ---- Dependencies for MNFST SDK ----
 

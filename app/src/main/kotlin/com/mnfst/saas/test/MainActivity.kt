@@ -1,210 +1,281 @@
 package com.mnfst.saas.test
 
+import android.Manifest
+import android.annotation.SuppressLint
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.mnfst.saas.sdk.MnfstApi
-import com.mnfst.saas.sdk.MnfstContext
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mnfst.saas.sdk.MnfstGenerationStatus
-import com.mnfst.saas.sdk.MnfstModerationStatus
 import com.mnfst.saas.sdk.MnfstRecognitionStatus
-import com.mnfst.saas.sdk.MnfstSdk
 import com.mnfst.saas.test.databinding.ActivityMainBinding
+import com.mnfst.saas.test.util.Logger
+import com.mnfst.saas.test.util.MediaPicker
+import com.mnfst.saas.test.util.PermissionManager
+import com.mnfst.saas.test.util.hasGranted
+import com.pocketimps.extlib.BoolProc
+import com.pocketimps.extlib.Proc
+import com.pocketimps.extlib.uiLazy
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import java.io.File
+import kotlin.coroutines.CoroutineContext
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
+  private val sdkRunner: SdkRunner by inject()
+  private val permissionManager: PermissionManager by inject()
+  private val logger: Logger by inject()
+
   private lateinit var binding: ActivityMainBinding
 
-  private fun MnfstApi.dumpMnfstObject() =
-      if (BuildConfig.DEBUG)
-         MnfstSdk.getDebugInterface().dumpObject(this)
+  private val rootJob = SupervisorJob()
+  override val coroutineContext: CoroutineContext
+    get() = Dispatchers.Main + rootJob
+
+  private val CODE_ACCOUNT_REVIEW = RESULT_FIRST_USER + 1
+  private val CODE_MEDIA_PICKER_START = RESULT_FIRST_USER + 2
+  private val CODE_RECOGNITION_IMAGE_PICK = CODE_MEDIA_PICKER_START
+  private val CODE_MODERATION_IMAGE_PICK = CODE_MEDIA_PICKER_START + 1
+  private val CODE_MODERATION_VIDEO_PICK = CODE_MEDIA_PICKER_START + 2
+  private val CODE_MEDIA_PICKER_END = CODE_MODERATION_VIDEO_PICK
+
+  private var inProgress = false
+
+
+  private val logAdapter by uiLazy {
+    LogAdapter(binding.consoleOutput, this)
+  }
+
+
+  private val mediaPicker = object : MediaPicker(this) {
+    override fun onImageReady(bitmap: Bitmap?, requestCode: Int) {
+      showProgress(false)
+
+      when (requestCode) {
+        CODE_RECOGNITION_IMAGE_PICK ->
+          bitmap.proceedImageRecognition()
+
+        CODE_MODERATION_IMAGE_PICK ->
+          bitmap.proceedImageModeration()
+
+      }
+    }
+
+    override fun onVideoReady(file: File, requestCode: Int) {
+      showProgress(false)
+      
+      if (requestCode != CODE_MODERATION_VIDEO_PICK)
+        return
+
+      file.proceedVideoModeration()
+    }
+
+    override fun onPrepareImage() = showProgress(true)
+    override fun onFailure() = Toast.makeText(this@MainActivity, R.string.message_picker_error, Toast.LENGTH_SHORT).show()
+    override fun onComplete() = showProgress(false)
+  }
+
+
+  private fun showProgress(show: Boolean) {
+    inProgress = show
+    binding.progressBar.visibility = if (show)
+      View.VISIBLE
+    else
+      View.GONE
+  }
+
+  private fun launchWithProgress(block: suspend () -> Unit) {
+    showProgress(true)
+    launch {
+      block.invoke()
+      showProgress(false)
+    }
+  }
+
+  @SuppressLint("LogNotTimber")
+  private fun debugPrint(message: String) {
+    logger.print(message)
+  }
+
+  private fun requestStoragePermission(permission: String, runOnSuccess: Proc) {
+    requestPermission(permission) {
+      if (it)
+        runOnSuccess.invoke()
       else
-        ""
-
-  private fun showProgress() {
-    binding.progressBar.visibility = View.VISIBLE
-  }
-
-  private fun hideProgress() {
-    binding.progressBar.visibility = View.GONE
-  }
-
-  private fun finishOperation(ctx: MnfstContext) {
-    // Do not forget to release MNFST context object
-    ctx.release()
-    hideProgress()
-  }
-
-  private fun runImageRecognition(ctx: MnfstContext, completionProc: () -> Unit) {
-    ctx.startImageRecognition {
-      "Image recognition finished with result status: ${it.status}".log()
-      it.dumpMnfstObject().log()
-
-      if (it.status == MnfstRecognitionStatus.DECLINED) {
-        // MNFST cloud recognition service detected something inappropriate on the image.
-        // Find and show the reason(s):
-        it.reasons.keys.forEach { key ->
-          if (it.reasons[key] == false)
-            "\"${key.tag}\" failed".log()
-        }
-      }
-
-      completionProc.invoke()
+        Toast.makeText(this, R.string.message_no_storage_permission, Toast.LENGTH_SHORT).show()
     }
   }
 
-  private fun generateCreative(ctx: MnfstContext) {
-    // If user selected video mask, we prepare video on the MNFST servers.
-    // Generation site is valid for video creatives only and ignored for images.
-
-    ctx.startCreativeGeneration {
-      "Creative generation finished with result status: ${it.status}".log()
-      it.dumpMnfstObject().log()
-
-      if (it.status == MnfstGenerationStatus.COMPLETED) {
-        // Save generated creative to file
-
-        val targetDir = getExternalFilesDir(null)
-        val targetFile: File
-
-        try {
-          if (it.isVideo) {
-            targetFile = File(targetDir, "video.mp4")
-            it.videoFile?.copyTo(targetFile, true)
-          } else {
-            targetFile = File(targetDir, "image.jpg")
-            it.image?.saveToFile(targetFile)
-          }
-
-          "OK: Saved to $targetFile".log()
-        } catch (e: Exception) {
-          "Failed to save generated creative: \"${e.message}\"".log()
-        }
-
-        // Creative is generated. Now run moderation
-        moderateCreative(ctx)
-      } else
-        finishOperation(ctx)
+  private fun requestPermission(permission: String, resultProc: BoolProc) {
+    permissionManager.requestPermissions(arrayOf(permission), this) { result ->
+      resultProc.invoke(result.hasGranted(permission))
     }
   }
 
-  private fun moderateCreative(ctx: MnfstContext) {
-    // Here creative moderation is performed on the generated video or image creative.
-    // On completion, we have a verdict from MNFST cloud
-
-    ctx.startModeration {
-      "Creative moderation finished with result status: ${it.status}".log()
-      it.dumpMnfstObject().log()
-
-      if (it.status == MnfstModerationStatus.DECLINED) {
-        // MNFST moderation service declined given creative. Report the reason:
-        "Reason: ${it.reason}".log()
-      }
-
-      finishOperation(ctx)
-    }
+  override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+    permissionManager.onRequestPermissionsResult(permissions, grantResults)
+    super.onRequestPermissionsResult(requestCode, permissions, grantResults)
   }
 
-  private fun openCamera() {
-    showProgress()
-
-    // Allocate a MNFST context
-    val ctx = MnfstSdk.createContext()
-
-    // Open camera screen and wait for resulting image or video file
-    ctx.startCamera(this) { res ->
-      if (res.canceled)
-        return@startCamera finishOperation(ctx)
-
-      // OK, user has taken a photo (or picked from the gallery).
-      // Now start image recognition
-      runImageRecognition(ctx) {
-        // Now we are ready to generate creative from the selected mask and taken (or picked) photo.
-        generateCreative(ctx)
-      }
-    }
-  }
-
-  private fun startAccountReview() {
-    showProgress()
-
-    // Allocate a MNFST context
-    val ctx = MnfstSdk.createContext()
-
-    // Start account review for some Instagram username
-    val username = "mnfst.official"
-    ctx.startAccountReview(username) {
-      "Account review finished with result status: ${it.status}".log()
-      it.dumpMnfstObject().log()
-
-      // Now it.account contains info about recent posts, likes etc. See documentation for details.
-
-      finishOperation(ctx)
-    }
-  }
-
-  private fun startManualImageRecognition() {
-    showProgress()
-
-    // Load bitmap from assets
-    val bitmap = readBitmap("sample1.jpg")
-
-    // Allocate a MNFST context
-    val ctx = MnfstSdk.createContext()
-
-    // Set bitmap as original
-    ctx.setOriginal(bitmap)
-
-    // Start recognition and wait for result
-    runImageRecognition(ctx) {
-      finishOperation(ctx)
-    }
-  }
-
-  private fun startManualImageModeration() {
-    showProgress()
-
-    // Load bitmap from assets
-    val bitmap = readBitmap("sample1.jpg")
-
-    // Allocate a MNFST context
-    val ctx = MnfstSdk.createContext()
-
-    // Start moderation of given bitmap. You may provide a bitmap or video file instead
-
-    ctx.startManualModeration(bitmap) {
-      "Manual moderation finished with result status: ${it.status}".log()
-      it.dumpMnfstObject().log()
-
-      if (it.status == MnfstModerationStatus.DECLINED) {
-        // MNFST moderation service declined given creative. Report the reason:
-        "Reason: ${it.reason}".log()
-      }
-
-      finishOperation(ctx)
-    }
-  }
+  private fun requestReadStoragePermission(runOnSuccess: Proc) =
+      requestStoragePermission(Manifest.permission.READ_EXTERNAL_STORAGE, runOnSuccess)
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
     binding = ActivityMainBinding.inflate(layoutInflater)
-    setContentView(binding.root)
+    super.onCreate(savedInstanceState)
 
-    binding.openCameraButton.setOnClickListener {
-      openCamera()
-    }
+    binding.apply {
+      setContentView(root)
 
-    binding.accountReviewButton.setOnClickListener {
-      startAccountReview()
-    }
+      consoleOutput.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
+      consoleOutput.adapter = logAdapter
 
-    binding.manualRecognitionButton.setOnClickListener {
-      startManualImageRecognition()
-    }
+      resetContextButton.setOnClickListener {
+        sdkRunner.resetContext()
+      }
 
-    binding.manualModerationButton.setOnClickListener {
-      startManualImageModeration()
+      dumpContextButton.setOnClickListener {
+        sdkRunner.dumpContext()
+      }
+
+      recognitionButton.setOnClickListener {
+        requestReadStoragePermission {
+          mediaPicker.selectFromGallery(this@MainActivity, CODE_RECOGNITION_IMAGE_PICK, false)
+        }
+      }
+
+      accountReviewButton.setOnClickListener {
+        startActivityForResult(Intent(this@MainActivity, AccountReviewActivity::class.java), CODE_ACCOUNT_REVIEW)
+      }
+
+      imageModerationButton.setOnClickListener {
+        requestReadStoragePermission {
+          mediaPicker.selectFromGallery(this@MainActivity, CODE_MODERATION_IMAGE_PICK, false)
+        }
+      }
+
+      videoModerationButton.setOnClickListener {
+        requestReadStoragePermission {
+          mediaPicker.selectFromGallery(this@MainActivity, CODE_MODERATION_VIDEO_PICK, true)
+        }
+      }
+
+      startCameraButton.setOnClickListener {
+        sdkRunner.startCamera(this@MainActivity) {
+          debugPrint("- Camera finished with result:")
+          sdkRunner.dumpObject(it)
+        }
+      }
+
+      generationButton.setOnClickListener {
+        if (sdkRunner.canStartGeneration())
+          startGeneration()
+      }
+
+      moderationButton.setOnClickListener {
+        sdkRunner.startCreativeModeration {
+          debugPrint("- Creative moderation finished with result:")
+          sdkRunner.dumpObject(it)
+        }
+      }
+
+      shareLogsButton.setOnClickListener {
+        launchWithProgress {
+          logAdapter.shareLogs()
+        }
+      }
     }
+  }
+
+  override fun onDestroy() {
+    super.onDestroy()
+    rootJob.cancel()
+  }
+
+  private fun Bitmap?.proceedImageRecognition() {
+    debugPrint(">> proceedImageRecognition(null ? ${this == null})")
+    this ?: return
+
+    sdkRunner.startImageRecognition(this) {
+      debugPrint("- Image recognition finished with result:")
+      sdkRunner.dumpObject(it)
+
+      // MNFST cloud recognition service detected something inappropriate on the image.
+      // Find and show the reason(s):
+      if (it.status == MnfstRecognitionStatus.DECLINED) {
+        it.reasons.keys.forEach { key ->
+          if (it.reasons[key] == false)
+            logger.print("\"${key.tag}\" failed")
+        }
+      }
+    }
+  }
+
+  private fun Bitmap?.proceedImageModeration() {
+    debugPrint(">> proceedImageModeration(null ? ${this == null})")
+    this ?: return
+
+    sdkRunner.startBitmapManualModeration(this) {
+      debugPrint("- Manual image moderation finished with result:")
+      sdkRunner.dumpObject(it)
+    }
+  }
+
+  private fun File.proceedVideoModeration() {
+    sdkRunner.startFileManualModeration(this) {
+      debugPrint("- Manual file moderation finished with result:")
+      sdkRunner.dumpObject(it)
+    }
+  }
+
+  private fun accountReview(username: String) {
+    sdkRunner.startAccountReview(username) {
+      debugPrint("- Account review finished with result:")
+      sdkRunner.dumpObject(it)
+    }
+  }
+
+  private fun startGeneration() {
+    sdkRunner.startGeneration {
+      debugPrint("- Creative generation finished with result:")
+      sdkRunner.dumpObject(it)
+
+      if (it.status == MnfstGenerationStatus.COMPLETED)
+        launch {
+          sdkRunner.saveGeneratedCreative(it)
+        }
+    }
+  }
+
+  override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    if (resultCode != RESULT_OK)
+      return
+
+    when (requestCode) {
+      CODE_ACCOUNT_REVIEW -> {
+        val username = data?.getStringExtra("result")?.takeUnless(String::isNullOrBlank)
+                       ?: return debugPrint("No username given")
+        accountReview(username)
+      }
+
+      in CODE_MEDIA_PICKER_START..CODE_MEDIA_PICKER_END ->
+        mediaPicker.onActivityResult(requestCode, resultCode, data,
+                                     requestCode == CODE_MODERATION_VIDEO_PICK)
+      else ->
+        super.onActivityResult(requestCode, resultCode, data)
+    }
+  }
+
+  override fun onBackPressed() {
+    if (!inProgress)
+      super.onBackPressed()
   }
 }

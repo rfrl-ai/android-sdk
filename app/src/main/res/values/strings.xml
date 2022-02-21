@@ -1,8 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="app_name" translatable="false">MNFST Test</string>
-  <string name="open_camera_button">Open Camera</string>
-  <string name="account_review_button">Account review</string>
-  <string name="manual_recognitioin_button">Manual image recognition</string>
-  <string name="manual_moderation_button">Manual image moderation</string>
+
+  <string name="button_reset_context">Reset context</string>
+  <string name="button_dump_context">Dump context</string>
+  <string name="button_recognition">Image recognition…</string>
+  <string name="button_image_moderation">Image moderation…</string>
+  <string name="button_video_moderation">Video moderation…</string>
+  <string name="button_account_review">Account review…</string>
+  <string name="button_camera">Start camera</string>
+  <string name="button_generation">Generate creative</string>
+  <string name="button_creative_moderation">Creative moderation…</string>
+
+  <string name="account_review_username_title">Instagram username to review:</string>
+  <string name="account_review_start">Start account review</string>
+
+  <string name="message_picker_error">Failed to pick media</string>
+  <string name="message_no_storage_permission">Storage permission not granted</string>
 </resources>

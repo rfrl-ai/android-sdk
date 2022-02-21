@@ -2,7 +2,6 @@ buildscript {
   repositories {
     google()
     mavenCentral()
-    maven("https://jitpack.io")
     maven("https://dl.bintray.com/android/android-tools")
     maven("https://storage.googleapis.com/r8-releases/raw")
     maven("https://kotlin.bintray.com/kotlinx")
