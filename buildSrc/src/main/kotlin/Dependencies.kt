@@ -2,6 +2,11 @@
 
 
 object Versions {
+  object Mnfst {
+    const val VERSION_CODE = 12
+    const val VERSION_NAME = "1.2.$VERSION_CODE"
+  }
+
   object Kotlin {
     const val LANGUAGE = "1.6.10"
     const val COROUTINES = "1.6.0"

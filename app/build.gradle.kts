@@ -2,7 +2,6 @@ plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("kapt")
-  id("kotlin-android-extensions")
   id("com.google.gms.google-services")
 }
 
@@ -17,22 +16,33 @@ android {
     resourceConfigurations += "en"
     resourceConfigurations += "ru"
 
-    versionCode = 12
-    versionName = "1.2.$versionCode"
+    versionCode = Versions.Mnfst.VERSION_CODE
+    versionName = Versions.Mnfst.VERSION_NAME
 
-    signingConfig = signingConfigs.create("default") {
-      storeFile = File("$projectDir/signing.keystore")
-      storePassword = "android"
-      keyAlias = "androiddebugkey"
-      keyPassword = "android"
-    }
+    setProperty("archivesBaseName", "mnfst-saas-${Versions.Mnfst.VERSION_NAME}.${getGitHash()}")
   }
 
   sourceSets {
     getByName("main").java.srcDir("src/main/kotlin")
   }
 
-  // Enable view binding
+  buildTypes {
+    getByName("debug").signingConfig = signingConfigs.getByName("debug") {
+      storeFile = File(projectDir, "debug.keystore")
+      storePassword = "android"
+      keyAlias = "androiddebugkey"
+      keyPassword = "android"
+    }
+
+    getByName("release").signingConfig = signingConfigs.create("release") {
+      storeFile = File(projectDir, "release.keystore")
+      val props = loadSigningProps()
+      storePassword = props.getProperty("storePassword")
+      keyAlias = props.getProperty("keyAlias")
+      keyPassword = props.getProperty("keyPassword")
+    }
+  }
+
   buildFeatures.viewBinding = true
   lint.checkReleaseBuilds = false
   
