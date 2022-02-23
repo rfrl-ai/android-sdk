@@ -18,6 +18,7 @@ val appModule = module {
   // Helper to invoke MNFST SDK functions
   single {
     SdkRunner(logger = get(),
+              config = get(),
               context = get())
   }
 

@@ -85,4 +85,5 @@ dependencies {
   implementation("com.pocketimps:extlib:${Versions.Utils.EXTLIB}")
   implementation("com.pocketimps:unlzma:${Versions.Utils.UNLZMA}")
   implementation("com.jakewharton.timber:timber:${Versions.Utils.TIMBER}")
+  implementation("com.jakewharton:process-phoenix:2.1.2")
 }

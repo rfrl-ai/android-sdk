@@ -8,15 +8,20 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.jakewharton.processphoenix.ProcessPhoenix
 import com.mnfst.saas.sdk.MnfstGenerationStatus
 import com.mnfst.saas.sdk.MnfstRecognitionStatus
+import com.mnfst.saas.test.ApiConfig
 import com.mnfst.saas.test.R
 import com.mnfst.saas.test.SdkRunner
 import com.mnfst.saas.test.databinding.ActivityMainBinding
+import com.mnfst.saas.test.util.Config
 import com.mnfst.saas.test.util.Logger
 import com.mnfst.saas.test.util.MediaPicker
 import com.mnfst.saas.test.util.PermissionManager
+import com.mnfst.saas.test.util.Utils
 import com.mnfst.saas.test.util.hasGranted
 import com.pocketimps.extlib.BoolProc
 import com.pocketimps.extlib.Proc
@@ -33,6 +38,7 @@ import kotlin.coroutines.CoroutineContext
 
 class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
   private val sdkRunner: SdkRunner by inject()
+  private val config: Config by inject()
   private val permissionManager: PermissionManager by inject()
   private val logger: Logger by inject()
 
@@ -130,6 +136,46 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
   private fun requestReadStoragePermission(runOnSuccess: Proc) =
       requestStoragePermission(Manifest.permission.READ_EXTERNAL_STORAGE, runOnSuccess)
 
+  private fun updateConfigButtons(allowAwait: Boolean = true) {
+    // Await until SDK is initialized
+    if (!sdkRunner.isInitialized())
+      return Utils.runUiLater(500L, ::updateConfigButtons)
+
+    // Debug interface might become available a bit later. Delay
+    if (allowAwait && !sdkRunner.hasDebug())
+      return Utils.runUiLater(1000L) {
+        updateConfigButtons(false)
+      }
+
+    binding.apply {
+      val initialApiConfig = config.getApiConfig()
+      var apiConfig = initialApiConfig
+      var restartRequired = false
+
+      fun update() {
+        apiConfigButton.text = getString(R.string.button_api_config_template, apiConfig.tag)
+        restartButton.isInvisible = !restartRequired
+      }
+
+      if (sdkRunner.hasDebug())
+        apiConfigButton.setOnClickListener {
+          // Toggle API config
+          apiConfig = if (apiConfig == ApiConfig.RELEASE)
+            ApiConfig.DEV
+          else
+            ApiConfig.RELEASE
+
+          config.setApiConfig(apiConfig)
+          restartRequired = (apiConfig !== initialApiConfig)
+          update()
+        }
+
+      // Freeze button, if debug interface is not provided by MNFST SDK
+      apiConfigButton.isEnabled = sdkRunner.hasDebug()
+      update()
+    }
+  }
+
   override fun onCreate(savedInstanceState: Bundle?) {
     binding = ActivityMainBinding.inflate(layoutInflater)
     super.onCreate(savedInstanceState)
@@ -139,6 +185,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
 
       consoleOutput.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL, false)
       consoleOutput.adapter = logAdapter
+
+      restartButton.setOnClickListener {
+        ProcessPhoenix.triggerRebirth(this@MainActivity)
+      }
 
       resetContextButton.setOnClickListener {
         sdkRunner.resetContext()
@@ -195,6 +245,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
         }
       }
     }
+
+    updateConfigButtons()
   }
 
   override fun onDestroy() {

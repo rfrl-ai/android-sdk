@@ -14,6 +14,7 @@ import com.mnfst.saas.sdk.MnfstInitStatus
 import com.mnfst.saas.sdk.MnfstModerationResult
 import com.mnfst.saas.sdk.MnfstRecognitionResult
 import com.mnfst.saas.sdk.MnfstSdk
+import com.mnfst.saas.test.util.Config
 import com.mnfst.saas.test.util.Logger
 import com.mnfst.saas.test.util.LoggerSink
 import com.mnfst.saas.test.util.saveToFileSync
@@ -24,6 +25,7 @@ import java.io.File
 
 
 class SdkRunner(private val context: Context,
+                private val config: Config,
                 private val logger: Logger) {
   private var status: MnfstInitStatus? = null
 
@@ -45,11 +47,12 @@ class SdkRunner(private val context: Context,
       debug?.let(proc::invoke)
 
   // Create MNFST SDK configuration
-  private fun createInitConfig(): MnfstInitConfig {
+  private fun createInitConfig(apiConfig: ApiConfig): MnfstInitConfig {
     logger.print(">> createInitConfig()")
 
     // Don't forget to set your client token for MNFST SDK!
-    val token = context.getString(R.string.token_mnfst)
+    val token = context.getString(apiConfig.tokenResId)
+    logger.print(" - API config: \"${apiConfig.tag}\"")
     logger.print(" - Using client token \"${token.take(8)}…\"")
 
     return MnfstInitConfig(context = context,
@@ -73,14 +76,16 @@ class SdkRunner(private val context: Context,
     // Plant Timber logger sink to intercept logs from MNFST SDK
     Timber.plant(LoggerSink(logger::print))
 
-    val config = createInitConfig()
+    // Obtain API config, default is release
+    val apiConfig = config.getApiConfig()
+    val initConfig = createInitConfig(apiConfig)
 
     logger.print("Running MnfstSdk.init()…")
-    MnfstSdk.init(config) {
+    MnfstSdk.init(initConfig) {
       status = it.status
       logger.print("MnfstSdk.init() result: \"$status\"")
 
-      if (it.status == MnfstInitStatus.SUCCESS)
+      if (it.status == MnfstInitStatus.SUCCESS) {
         debug = try {
           // Try to obtain debug interface from MNFST SDK
           MnfstSdk.getDebugInterface()
@@ -88,6 +93,14 @@ class SdkRunner(private val context: Context,
           logger.print("Debug interface not available")
           null
         }
+
+        // Display SDK version
+        val version = MnfstSdk.getVersion()
+        logger.print(" - MNFST SDK version: \"$version\"")
+
+        // Change API endpoint
+        debug?.setApiEndpoint(context.getString(apiConfig.urlResId))
+      }
     }
   }
 
@@ -102,6 +115,9 @@ class SdkRunner(private val context: Context,
       null
     }
   }
+
+  fun isInitialized() = (status != null && status != MnfstInitStatus.STILL_IN_PROGRESS)
+  fun hasDebug() = (debug != null)
 
   // Release current MNFST context, if any
   fun resetContext() = ensureInitialized {

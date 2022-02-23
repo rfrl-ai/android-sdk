@@ -2,6 +2,8 @@
 <resources>
   <string name="app_name" translatable="false">MNFST Test</string>
 
+  <string name="button_api_config_template">Config: %s</string>
+  <string name="button_restart">Restart app</string>
   <string name="button_reset_context">Reset context</string>
   <string name="button_dump_context">Dump context</string>
   <string name="button_recognition">Image recognition…</string>

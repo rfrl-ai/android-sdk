@@ -2,4 +2,7 @@
 <resources>
   <!-- Replace with your MNFST SDK -->
   <string name="token_mnfst" translatable="false">d1c8d749-451e-478d-9521-537b50099a64</string>
+
+  <!-- Sandbox token. Use for testing only! -->
+  <string name="token_mnfst_dev" translatable="false">f0dc9489-c913-46e9-8aaa-1392b13b1a41</string>
 </resources>
