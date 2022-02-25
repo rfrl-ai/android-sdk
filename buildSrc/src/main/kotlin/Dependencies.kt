@@ -3,7 +3,7 @@
 
 object Versions {
   object Mnfst {
-    const val VERSION_CODE = 13
+    const val VERSION_CODE = 15
     const val VERSION_NAME = "1.2.$VERSION_CODE"
   }
 
@@ -13,7 +13,7 @@ object Versions {
   }
 
   object Build {
-    const val GRADLE_PLUGIN = "7.1.1"
+    const val GRADLE_PLUGIN = "7.1.2"
     const val GMS = "4.3.10"
     const val R8 = "3.0.73"
   }
@@ -37,6 +37,7 @@ object Versions {
   }
 
   object Utils {
+    const val CRASHLYTICS = "18.2.8"
     const val EXO_PLAYER = "2.16.1"
     const val COIL = "1.4.0"
     const val KOIN = "3.1.5"

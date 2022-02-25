@@ -18,6 +18,7 @@ import com.mnfst.saas.test.util.Config
 import com.mnfst.saas.test.util.Logger
 import com.mnfst.saas.test.util.LoggerSink
 import com.mnfst.saas.test.util.saveToFileSync
+import com.pocketimps.extlib.alsoIfFalse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -191,7 +192,7 @@ class SdkRunner(private val context: Context,
     logger.print(">> canStartGeneration()")
     val ctx = getContext() ?: return false
 
-    return ctx.hasCreative().also {
+    return ctx.hasCreative().alsoIfFalse {
       logger.print("- FAIL: Creative not set. Run camera first")
     }
   }

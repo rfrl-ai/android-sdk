@@ -3,6 +3,7 @@ plugins {
   kotlin("android")
   kotlin("kapt")
   id("com.google.gms.google-services")
+  id("com.google.firebase.crashlytics")
 }
 
 android {
@@ -56,6 +57,7 @@ dependencies {
   // MNFST SDK. ":mnfst-dev" provides debug interface
   //implementation(project(":mnfst"))
   implementation(project(":mnfst-dev"))
+  implementation("com.google.firebase:firebase-crashlytics:${Versions.Utils.CRASHLYTICS}")
 
   // ---- Dependencies for MNFST SDK ----
 
