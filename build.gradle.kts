@@ -8,11 +8,12 @@ buildscript {
   }
 
   dependencies {
+    classpath(kotlin("gradle-plugin", Versions.Kotlin.LANGUAGE))
     classpath("com.android.tools.build:gradle:${Versions.Build.GRADLE_PLUGIN}")
     classpath("com.google.gms:google-services:${Versions.Build.GMS}")
+    classpath("com.google.firebase:firebase-appdistribution-gradle:3.0.0")
     classpath("com.google.firebase:firebase-crashlytics-gradle:2.8.1")
     classpath("com.android.tools:r8:${Versions.Build.R8}")
-    classpath(kotlin("gradle-plugin", Versions.Kotlin.LANGUAGE))
   }
 }
 

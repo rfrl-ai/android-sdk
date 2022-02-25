@@ -3,7 +3,6 @@ package com.mnfst.saas.test
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import com.mnfst.saas.sdk.MnfstAccountReviewResult
 import com.mnfst.saas.sdk.MnfstApi
 import com.mnfst.saas.sdk.MnfstCameraResult
 import com.mnfst.saas.sdk.MnfstContext
@@ -18,7 +17,6 @@ import com.mnfst.saas.test.util.Config
 import com.mnfst.saas.test.util.Logger
 import com.mnfst.saas.test.util.LoggerSink
 import com.mnfst.saas.test.util.saveToFileSync
-import com.pocketimps.extlib.alsoIfFalse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -45,7 +43,7 @@ class SdkRunner(private val context: Context,
       }
   
   private fun <R> debug(proc: MnfstDebug.() -> R): R? =
-      debug?.let(proc::invoke)
+    debug?.let(proc::invoke)
 
   // Create MNFST SDK configuration
   private fun createInitConfig(apiConfig: ApiConfig): MnfstInitConfig {
@@ -182,17 +180,11 @@ class SdkRunner(private val context: Context,
     getContext()?.startManualModeration(bitmap, resultCallback)
   }
 
-  // Start account review for given Instagram username
-  fun startAccountReview(username: String, resultCallback: (result: MnfstAccountReviewResult) -> Unit) = ensureInitialized {
-    logger.print(">> startAccountReview(username: \"$username\")")
-    getContext()?.startAccountReview(username, resultCallback)
-  }
-
   fun canStartGeneration(): Boolean {
     logger.print(">> canStartGeneration()")
     val ctx = getContext() ?: return false
 
-    return ctx.hasCreative().alsoIfFalse {
+    return ctx.hasCreative().also {
       logger.print("- FAIL: Creative not set. Run camera first")
     }
   }
@@ -204,7 +196,7 @@ class SdkRunner(private val context: Context,
 
   suspend fun saveGeneratedCreative(result: MnfstGenerationResult) = ensureInitialized {
     logger.print(">> saveGeneratedCreative()")
-    
+
     withContext(Dispatchers.IO) {
       val targetDir = context.getExternalFilesDir(null)
       val targetFile: File

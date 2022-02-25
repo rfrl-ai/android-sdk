@@ -2,8 +2,9 @@ plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("kapt")
-  id("com.google.gms.google-services")
-  id("com.google.firebase.crashlytics")
+  google("gms.google-services")
+  firebase("appdistribution")
+  firebase("crashlytics")
 }
 
 android {
@@ -21,6 +22,11 @@ android {
     versionName = Versions.Mnfst.VERSION_NAME
 
     setProperty("archivesBaseName", "mnfst-saas-${Versions.Mnfst.VERSION_NAME}.${getGitHash()}")
+  }
+
+  firebaseAppDistribution {
+    artifactType = "APK"
+    groups = "androidsaastest"
   }
 
   sourceSets {
@@ -89,3 +95,5 @@ dependencies {
   implementation("com.jakewharton.timber:timber:${Versions.Utils.TIMBER}")
   implementation("com.jakewharton:process-phoenix:2.1.2")
 }
+
+taskAlias("upload" to listOf("assembleRelease", "appDistributionUploadRelease"))

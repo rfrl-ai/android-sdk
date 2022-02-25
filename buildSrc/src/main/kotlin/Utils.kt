@@ -1,8 +1,14 @@
 import org.gradle.api.Project
+import org.gradle.plugin.use.PluginDependenciesSpec
+import org.gradle.plugin.use.PluginDependencySpec
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileInputStream
 import java.util.*
+
+
+fun PluginDependenciesSpec.google(module: String): PluginDependencySpec = id("com.google.$module")
+fun PluginDependenciesSpec.firebase(module: String) = google("firebase.$module")
 
 
 fun Project.getGitHash(): String {
@@ -30,5 +36,13 @@ fun Project.loadSigningProps() = Properties().also { props ->
     props["storePassword"] = System.getenv("storePassword")
     props["keyAlias"] = System.getenv("keyAlias")
     props["keyPassword"] = System.getenv("keyPassword")
+  }
+}
+
+fun Project.taskAlias(pair: Pair<String, List<String>>) {
+  tasks.register(pair.first) {
+    pair.second.forEach {
+      dependsOn(":${this@taskAlias.name}:$it")
+    }
   }
 }

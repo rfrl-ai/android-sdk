@@ -48,8 +48,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
   override val coroutineContext: CoroutineContext
     get() = Dispatchers.Main + rootJob
 
-  private val CODE_ACCOUNT_REVIEW = RESULT_FIRST_USER + 1
-  private val CODE_MEDIA_PICKER_START = RESULT_FIRST_USER + 2
+  private val CODE_MEDIA_PICKER_START = RESULT_FIRST_USER + 1
   private val CODE_RECOGNITION_IMAGE_PICK = CODE_MEDIA_PICKER_START
   private val CODE_MODERATION_IMAGE_PICK = CODE_MEDIA_PICKER_START + 1
   private val CODE_MODERATION_VIDEO_PICK = CODE_MEDIA_PICKER_START + 2
@@ -134,7 +133,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
   }
 
   private fun requestReadStoragePermission(runOnSuccess: Proc) =
-      requestStoragePermission(Manifest.permission.READ_EXTERNAL_STORAGE, runOnSuccess)
+    requestStoragePermission(Manifest.permission.READ_EXTERNAL_STORAGE, runOnSuccess)
 
   private fun updateConfigButtons(allowAwait: Boolean = true) {
     // Await until SDK is initialized
@@ -143,7 +142,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
 
     // Debug interface might become available a bit later. Delay
     if (allowAwait && !sdkRunner.hasDebug())
-      return Utils.runUiLater(1000L) {
+      return Utils.runUiLater(2000L) {
         updateConfigButtons(false)
       }
 
@@ -198,14 +197,17 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
         sdkRunner.dumpContext()
       }
 
+      startCameraButton.setOnClickListener {
+        sdkRunner.startCamera(this@MainActivity) {
+          debugPrint("- Camera finished with result:")
+          sdkRunner.dumpObject(it)
+        }
+      }
+
       recognitionButton.setOnClickListener {
         requestReadStoragePermission {
           mediaPicker.selectFromGallery(this@MainActivity, CODE_RECOGNITION_IMAGE_PICK, false)
         }
-      }
-
-      accountReviewButton.setOnClickListener {
-        startActivityForResult(Intent(this@MainActivity, AccountReviewActivity::class.java), CODE_ACCOUNT_REVIEW)
       }
 
       imageModerationButton.setOnClickListener {
@@ -217,13 +219,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
       videoModerationButton.setOnClickListener {
         requestReadStoragePermission {
           mediaPicker.selectFromGallery(this@MainActivity, CODE_MODERATION_VIDEO_PICK, true)
-        }
-      }
-
-      startCameraButton.setOnClickListener {
-        sdkRunner.startCamera(this@MainActivity) {
-          debugPrint("- Camera finished with result:")
-          sdkRunner.dumpObject(it)
         }
       }
 
@@ -290,13 +285,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
     }
   }
 
-  private fun accountReview(username: String) {
-    sdkRunner.startAccountReview(username) {
-      debugPrint("- Account review finished with result:")
-      sdkRunner.dumpObject(it)
-    }
-  }
-
   private fun startGeneration() {
     sdkRunner.startGeneration {
       debugPrint("- Creative generation finished with result:")
@@ -314,12 +302,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
       return
 
     when (requestCode) {
-      CODE_ACCOUNT_REVIEW -> {
-        val username = data?.getStringExtra("result")?.takeUnless(String::isNullOrBlank)
-                       ?: return debugPrint("No username given")
-        accountReview(username)
-      }
-
       in CODE_MEDIA_PICKER_START..CODE_MEDIA_PICKER_END ->
         mediaPicker.onActivityResult(requestCode, resultCode, data,
                                      requestCode == CODE_MODERATION_VIDEO_PICK)
