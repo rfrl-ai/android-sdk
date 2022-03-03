@@ -1,2 +1,2 @@
-rootProject.name = "mnfst SaaS"
-include(":app", ":mnfst", ":mnfst-dev")
+rootProject.name = "Mnfst SaaS Demo"
+include(":app")

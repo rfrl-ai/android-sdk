@@ -23,5 +23,6 @@ allprojects {
     google()
     mavenCentral()
     maven("https://jitpack.io")
+    maven("https://mnfst-s3-static.s3.eu-central-1.amazonaws.com/saas/repository/")
   }
 }

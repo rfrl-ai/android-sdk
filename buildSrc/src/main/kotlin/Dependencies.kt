@@ -31,19 +31,11 @@ object Versions {
     const val CONSTRAINT_LAYOUT = "2.1.3"
   }
 
-  object Network {
-    const val RETROFIT = "2.9.0"
-    const val LOGGING_INTERCEPTOR = "4.9.3"
-  }
-
   object Utils {
-    const val CRASHLYTICS = "18.2.8"
-    const val EXO_PLAYER = "2.16.1"
-    const val COIL = "1.4.0"
     const val KOIN = "3.1.5"
-    const val EXTLIB = "1.0.1"
-    const val UNLZMA = "1.0.1"
+    const val CRASHLYTICS = "18.2.8"
     const val TIMBER = "5.0.1"
-    const val FACE_DETECTION = "16.2.0"
+    const val PHOENIX = "2.1.2"
+    const val EXTLIB = "1.0.1"
   }
 }

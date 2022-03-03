@@ -61,11 +61,8 @@ android {
 
 dependencies {
   // MNFST SDK. ":mnfst-dev" provides debug interface
-  //implementation(project(":mnfst"))
-  implementation(project(":mnfst-dev"))
-  implementation("com.google.firebase:firebase-crashlytics:${Versions.Utils.CRASHLYTICS}")
-
-  // ---- Dependencies for MNFST SDK ----
+  //implementation("com.mnfst.saas:sdk:${Versions.Mnfst.VERSION_NAME}")
+  implementation("com.mnfst.saas:sdk-dev:${Versions.Mnfst.VERSION_NAME}")
 
   // Kotlin
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.Kotlin.LANGUAGE}")
@@ -77,23 +74,12 @@ dependencies {
   implementation("androidx.recyclerview:recyclerview:${Versions.AppCompat.RECYCLER}")
   implementation("androidx.constraintlayout:constraintlayout:${Versions.AppCompat.CONSTRAINT_LAYOUT}")
 
-  // Firebase ML
-  implementation("com.google.android.gms:play-services-mlkit-face-detection:${Versions.Utils.FACE_DETECTION}")
-
-  // Networking
-  implementation("com.squareup.retrofit2:retrofit:${Versions.Network.RETROFIT}")
-  implementation("com.squareup.retrofit2:converter-gson:${Versions.Network.RETROFIT}")
-  implementation("com.squareup.retrofit2:converter-scalars:${Versions.Network.RETROFIT}")
-  implementation("com.squareup.okhttp3:logging-interceptor:${Versions.Network.LOGGING_INTERCEPTOR}")
-
   // Utils
   implementation("io.insert-koin:koin-android:${Versions.Utils.KOIN}")
-  implementation("io.coil-kt:coil:${Versions.Utils.COIL}")
-  implementation("com.google.android.exoplayer:exoplayer-core:${Versions.Utils.EXO_PLAYER}")
-  implementation("com.pocketimps:extlib:${Versions.Utils.EXTLIB}")
-  implementation("com.pocketimps:unlzma:${Versions.Utils.UNLZMA}")
+  implementation("com.google.firebase:firebase-crashlytics:${Versions.Utils.CRASHLYTICS}")
   implementation("com.jakewharton.timber:timber:${Versions.Utils.TIMBER}")
-  implementation("com.jakewharton:process-phoenix:2.1.2")
+  implementation("com.jakewharton:process-phoenix:${Versions.Utils.PHOENIX}")
+  implementation("com.pocketimps:extlib:${Versions.Utils.EXTLIB}")
 }
 
 taskAlias("upload" to listOf("assembleRelease", "appDistributionUploadRelease"))
