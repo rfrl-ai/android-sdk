@@ -3,7 +3,7 @@
 
 object Versions {
   object Mnfst {
-    const val VERSION_CODE = 16
+    const val VERSION_CODE = 17
     const val VERSION_NAME = "1.2.$VERSION_CODE"
   }
 
@@ -15,7 +15,7 @@ object Versions {
   object Build {
     const val GRADLE_PLUGIN = "7.1.2"
     const val GMS = "4.3.10"
-    const val R8 = "3.0.73"
+    const val R8 = "3.1.51"
   }
 
   object Android {
