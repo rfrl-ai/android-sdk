@@ -1,2 +1,2 @@
-rootProject.name = "Mnfst SaaS Demo"
+rootProject.name = "RFRL SaaS Demo"
 include(":app")

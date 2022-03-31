@@ -1,5 +1,17 @@
-package com.mnfst.saas.test.ui
+package ai.rfrl.saas.test.ui
 
+import ai.rfrl.saas.sdk.RfrlGenerationStatus
+import ai.rfrl.saas.sdk.RfrlRecognitionStatus
+import ai.rfrl.saas.test.ApiConfig
+import ai.rfrl.saas.test.R
+import ai.rfrl.saas.test.SdkRunner
+import ai.rfrl.saas.test.databinding.ActivityMainBinding
+import ai.rfrl.saas.test.util.Config
+import ai.rfrl.saas.test.util.Logger
+import ai.rfrl.saas.test.util.MediaPicker
+import ai.rfrl.saas.test.util.PermissionManager
+import ai.rfrl.saas.test.util.Utils
+import ai.rfrl.saas.test.util.hasGranted
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,18 +23,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isInvisible
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.jakewharton.processphoenix.ProcessPhoenix
-import com.mnfst.saas.sdk.MnfstGenerationStatus
-import com.mnfst.saas.sdk.MnfstRecognitionStatus
-import com.mnfst.saas.test.ApiConfig
-import com.mnfst.saas.test.R
-import com.mnfst.saas.test.SdkRunner
-import com.mnfst.saas.test.databinding.ActivityMainBinding
-import com.mnfst.saas.test.util.Config
-import com.mnfst.saas.test.util.Logger
-import com.mnfst.saas.test.util.MediaPicker
-import com.mnfst.saas.test.util.PermissionManager
-import com.mnfst.saas.test.util.Utils
-import com.mnfst.saas.test.util.hasGranted
 import com.pocketimps.extlib.BoolProc
 import com.pocketimps.extlib.Proc
 import com.pocketimps.extlib.uiLazy
@@ -169,7 +169,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
           update()
         }
 
-      // Freeze button, if debug interface is not provided by MNFST SDK
+      // Freeze button, if debug interface is not provided by RFRL SDK
       apiConfigButton.isEnabled = sdkRunner.hasDebug()
       update()
     }
@@ -257,9 +257,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
       debugPrint("- Image recognition finished with result:")
       sdkRunner.dumpObject(it)
 
-      // MNFST cloud recognition service detected something inappropriate on the image.
+      // RFRL cloud recognition service detected something inappropriate on the image.
       // Find and show the reason(s):
-      if (it.status == MnfstRecognitionStatus.DECLINED) {
+      if (it.status == RfrlRecognitionStatus.DECLINED) {
         it.reasons.keys.forEach { key ->
           if (it.reasons[key] == false)
             logger.print("\"${key.tag}\" failed")
@@ -290,7 +290,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope, KoinComponent {
       debugPrint("- Creative generation finished with result:")
       sdkRunner.dumpObject(it)
 
-      if (it.status == MnfstGenerationStatus.COMPLETED)
+      if (it.status == RfrlGenerationStatus.COMPLETED)
         launch {
           sdkRunner.saveGeneratedCreative(it)
         }

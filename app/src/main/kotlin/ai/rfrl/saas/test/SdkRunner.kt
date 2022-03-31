@@ -1,22 +1,22 @@
-package com.mnfst.saas.test
+package ai.rfrl.saas.test
 
+import ai.rfrl.saas.sdk.RfrlApi
+import ai.rfrl.saas.sdk.RfrlCameraResult
+import ai.rfrl.saas.sdk.RfrlContext
+import ai.rfrl.saas.sdk.RfrlDebug
+import ai.rfrl.saas.sdk.RfrlGenerationResult
+import ai.rfrl.saas.sdk.RfrlInitConfig
+import ai.rfrl.saas.sdk.RfrlInitStatus
+import ai.rfrl.saas.sdk.RfrlModerationResult
+import ai.rfrl.saas.sdk.RfrlRecognitionResult
+import ai.rfrl.saas.sdk.RfrlSdk
+import ai.rfrl.saas.test.util.Config
+import ai.rfrl.saas.test.util.Logger
+import ai.rfrl.saas.test.util.LoggerSink
+import ai.rfrl.saas.test.util.saveToFileSync
 import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
-import com.mnfst.saas.sdk.MnfstApi
-import com.mnfst.saas.sdk.MnfstCameraResult
-import com.mnfst.saas.sdk.MnfstContext
-import com.mnfst.saas.sdk.MnfstDebug
-import com.mnfst.saas.sdk.MnfstGenerationResult
-import com.mnfst.saas.sdk.MnfstInitConfig
-import com.mnfst.saas.sdk.MnfstInitStatus
-import com.mnfst.saas.sdk.MnfstModerationResult
-import com.mnfst.saas.sdk.MnfstRecognitionResult
-import com.mnfst.saas.sdk.MnfstSdk
-import com.mnfst.saas.test.util.Config
-import com.mnfst.saas.test.util.Logger
-import com.mnfst.saas.test.util.LoggerSink
-import com.mnfst.saas.test.util.saveToFileSync
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import timber.log.Timber
@@ -26,76 +26,76 @@ import java.io.File
 class SdkRunner(private val context: Context,
                 private val config: Config,
                 private val logger: Logger) {
-  private var status: MnfstInitStatus? = null
+  private var status: RfrlInitStatus? = null
 
-  // DEV build of MNFST exposes debug interface, so you may tune up it a bit
-  private var debug: MnfstDebug? = null
+  // DEV build of RFRL exposes debug interface, so you may tune up it a bit
+  private var debug: RfrlDebug? = null
 
-  // Current MNFST SDK context object
-  private var mnfstContext: MnfstContext? = null
+  // Current RFRL SDK context object
+  private var rfrlContext: RfrlContext? = null
 
   private inline fun <T> ensureInitialized(block: () -> T): T? =
-    if (status == MnfstInitStatus.SUCCESS)
+    if (status == RfrlInitStatus.SUCCESS)
       block.invoke()
     else
       null.also {
-        logger.print("FAIL: MNFST SDK was not initialized")
+        logger.print("FAIL: RFRL SDK was not initialized")
       }
   
-  private fun <R> debug(proc: MnfstDebug.() -> R): R? =
+  private fun <R> debug(proc: RfrlDebug.() -> R): R? =
     debug?.let(proc::invoke)
 
-  // Create MNFST SDK configuration
-  private fun createInitConfig(apiConfig: ApiConfig): MnfstInitConfig {
+  // Create RFRL SDK configuration
+  private fun createInitConfig(apiConfig: ApiConfig): RfrlInitConfig {
     logger.print(">> createInitConfig()")
 
-    // Don't forget to set your client token for MNFST SDK!
+    // Don't forget to set your client token for RFRL SDK!
     val token = context.getString(apiConfig.tokenResId)
     logger.print(" - API config: \"${apiConfig.tag}\"")
     logger.print(" - Using client token \"${token.take(8)}…\"")
 
-    return MnfstInitConfig(context = context,
-                           clientToken = token)
+    return RfrlInitConfig(context = context,
+                          clientToken = token)
   }
 
   fun initSdk() {
     logger.print(">> initSdk()")
 
     when (status) {
-      MnfstInitStatus.SUCCESS ->
+      RfrlInitStatus.SUCCESS ->
         return logger.print("SKIP: already initialized")
 
-      MnfstInitStatus.STILL_IN_PROGRESS ->
+      RfrlInitStatus.STILL_IN_PROGRESS ->
         return logger.print("SKIP: initialization is still in progress")
 
-      MnfstInitStatus.ERROR_INVALID_TOKEN ->
-        return logger.print("FAIL: initialization failed due to invalid MNFST SDK token. Please, contact MNFST team")
+      RfrlInitStatus.ERROR_INVALID_TOKEN ->
+        return logger.print("FAIL: initialization failed due to invalid RFRL SDK token. Please, contact RFRL team")
     }
 
-    // Plant Timber logger sink to intercept logs from MNFST SDK
+    // Plant Timber logger sink to intercept logs from RFRL SDK
     Timber.plant(LoggerSink(logger::print))
 
     // Obtain API config, default is release
     val apiConfig = config.getApiConfig()
     val initConfig = createInitConfig(apiConfig)
 
-    logger.print("Running MnfstSdk.init()…")
-    MnfstSdk.init(initConfig) {
+    logger.print("Running RfrlSdk.init()…")
+    RfrlSdk.init(initConfig) {
       status = it.status
-      logger.print("MnfstSdk.init() result: \"$status\"")
+      logger.print("RfrlSdk.init() result: \"$status\"")
 
-      if (it.status == MnfstInitStatus.SUCCESS) {
+      if (it.status == RfrlInitStatus.SUCCESS) {
         debug = try {
-          // Try to obtain debug interface from MNFST SDK
-          MnfstSdk.getDebugInterface()
+          // Try to obtain debug interface from RFRL SDK
+          RfrlSdk.getDebugInterface()
         } catch (e: UnsupportedOperationException) {
           logger.print("Debug interface not available")
           null
         }
 
         // Display SDK version
-        val version = MnfstSdk.getVersion()
-        logger.print(" - MNFST SDK version: \"$version\"")
+        val version = RfrlSdk.getVersion()
+        logger.print(" - RFRL SDK version: \"$version\"")
 
         // Change API endpoint
         debug?.setApiEndpoint(context.getString(apiConfig.urlResId))
@@ -103,11 +103,11 @@ class SdkRunner(private val context: Context,
     }
   }
 
-  // Ensure MNFST context is initialized
+  // Ensure RFRL context is initialized
   private fun getContext() = ensureInitialized {
-    mnfstContext ?: try {
-      MnfstSdk.createContext().also {
-        mnfstContext = it
+    rfrlContext ?: try {
+      RfrlSdk.createContext().also {
+        rfrlContext = it
       }
     } catch (e: Exception) {
       logger.print("FAIL: ${e.localizedMessage}")
@@ -115,28 +115,28 @@ class SdkRunner(private val context: Context,
     }
   }
 
-  fun isInitialized() = (status != null && status != MnfstInitStatus.STILL_IN_PROGRESS)
+  fun isInitialized() = (status != null && status != RfrlInitStatus.STILL_IN_PROGRESS)
   fun hasDebug() = (debug != null)
 
-  // Release current MNFST context, if any
+  // Release current RFRL context, if any
   fun resetContext() = ensureInitialized {
     logger.print(">> resetContext()")
 
-    mnfstContext?.apply {
+    rfrlContext?.apply {
       release()
       logger.print("- Old context released")
-      mnfstContext = null
+      rfrlContext = null
     }
 
     getContext()
   }
 
-  // Dump content of given MNFST API object (debug build only)
-  fun dumpObject(obj: MnfstApi) = debug {
+  // Dump content of given RFRL API object (debug build only)
+  fun dumpObject(obj: RfrlApi) = debug {
     dumpObject(obj).also(logger::print)
   }
 
-  // Dump current MNFST context
+  // Dump current RFRL context
   fun dumpContext(): String? {
     logger.print(">> dumpContext()")
     val context = getContext() ?: return null.also {
@@ -146,8 +146,8 @@ class SdkRunner(private val context: Context,
     return dumpObject(context)
   }
 
-  // Start MNFST camera. Resulted image/video info will be stored inside current MNFST context
-  fun startCamera(activity: Activity, resultCallback: (result: MnfstCameraResult) -> Unit) = ensureInitialized {
+  // Start RFRL camera. Resulted image/video info will be stored inside current RFRL context
+  fun startCamera(activity: Activity, resultCallback: (result: RfrlCameraResult) -> Unit) = ensureInitialized {
     logger.print(">> startCamera()")
 
     // Enable camera debug overlay (debug build only)
@@ -158,8 +158,8 @@ class SdkRunner(private val context: Context,
     getContext()?.startCamera(activity, resultCallback)
   }
 
-  // Start image recognition. Result will be stored in current MNFST context.
-  fun startImageRecognition(bitmap: Bitmap, resultCallback: (result: MnfstRecognitionResult) -> Unit) = ensureInitialized {
+  // Start image recognition. Result will be stored in current RFRL context.
+  fun startImageRecognition(bitmap: Bitmap, resultCallback: (result: RfrlRecognitionResult) -> Unit) = ensureInitialized {
     logger.print(">> startImageRecognition()")
 
     getContext()?.apply {
@@ -168,14 +168,14 @@ class SdkRunner(private val context: Context,
     }
   }
 
-  fun startFileManualModeration(file: File, resultCallback: (result: MnfstModerationResult) -> Unit) = ensureInitialized {
+  fun startFileManualModeration(file: File, resultCallback: (result: RfrlModerationResult) -> Unit) = ensureInitialized {
     logger.print(">> startFileManualModeration(file: \"$file\")")
     getContext()?.startManualModeration(file, resultCallback)
   }
 
   // Creative moderation is performed on the generated video or image creative.
-  // On completion, we have a verdict from the MNFST cloud
-  fun startBitmapManualModeration(bitmap: Bitmap, resultCallback: (result: MnfstModerationResult) -> Unit) = ensureInitialized {
+  // On completion, we have a verdict from the RFRL cloud
+  fun startBitmapManualModeration(bitmap: Bitmap, resultCallback: (result: RfrlModerationResult) -> Unit) = ensureInitialized {
     logger.print(">> startBitmapManualModeration()")
     getContext()?.startManualModeration(bitmap, resultCallback)
   }
@@ -189,12 +189,12 @@ class SdkRunner(private val context: Context,
     }
   }
 
-  fun startGeneration(resultCallback: (result: MnfstGenerationResult) -> Unit) = ensureInitialized {
+  fun startGeneration(resultCallback: (result: RfrlGenerationResult) -> Unit) = ensureInitialized {
     logger.print(">> startGeneration()")
     getContext()?.startCreativeGeneration(resultCallback)
   }
 
-  suspend fun saveGeneratedCreative(result: MnfstGenerationResult) = ensureInitialized {
+  suspend fun saveGeneratedCreative(result: RfrlGenerationResult) = ensureInitialized {
     logger.print(">> saveGeneratedCreative()")
 
     withContext(Dispatchers.IO) {
@@ -217,7 +217,7 @@ class SdkRunner(private val context: Context,
     }
   }
 
-  fun startCreativeModeration(resultCallback: (result: MnfstModerationResult) -> Unit) = ensureInitialized {
+  fun startCreativeModeration(resultCallback: (result: RfrlModerationResult) -> Unit) = ensureInitialized {
     logger.print(">> startCreativeModeration()")
     getContext()?.startModeration(resultCallback)
   }

@@ -1,4 +1,4 @@
-package com.mnfst.saas.test.util
+package ai.rfrl.saas.test.util
 
 import android.app.Activity
 import android.content.ActivityNotFoundException

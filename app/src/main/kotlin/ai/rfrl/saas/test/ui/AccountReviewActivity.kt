@@ -1,10 +1,10 @@
-package com.mnfst.saas.test.ui
+package ai.rfrl.saas.test.ui
 
+import ai.rfrl.saas.test.databinding.ActivityAccountReviewBinding
+import ai.rfrl.saas.test.util.Config
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.mnfst.saas.test.databinding.ActivityAccountReviewBinding
-import com.mnfst.saas.test.util.Config
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
 

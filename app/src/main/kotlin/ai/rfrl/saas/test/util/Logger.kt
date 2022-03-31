@@ -1,4 +1,4 @@
-package com.mnfst.saas.test.util
+package ai.rfrl.saas.test.util
 
 import com.pocketimps.extlib.make
 import kotlinx.coroutines.CoroutineScope

@@ -2,15 +2,15 @@ plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("kapt")
-  google("gms.google-services")
-  firebase("appdistribution")
-  firebase("crashlytics")
+//  google("gms.google-services")
+//  firebase("appdistribution")
+//  firebase("crashlytics")
 }
 
 android {
   compileSdk = Versions.Android.COMPILE
   defaultConfig {
-    applicationId = "com.mnfst.saas.test"
+    applicationId = "ai.rfrl.saas.test"
 
     minSdk = Versions.Android.MIN
     targetSdk = Versions.Android.TARGET
@@ -18,16 +18,16 @@ android {
     resourceConfigurations += "en"
     resourceConfigurations += "ru"
 
-    versionCode = Versions.Mnfst.VERSION_CODE
-    versionName = Versions.Mnfst.VERSION_NAME
+    versionCode = Versions.App.VERSION_CODE
+    versionName = Versions.App.VERSION_NAME
 
-    setProperty("archivesBaseName", "mnfst-saas-${Versions.Mnfst.VERSION_NAME}.${getGitHash()}")
+    setProperty("archivesBaseName", "rfrl-saas-${Versions.App.VERSION_NAME}.${getGitHash()}")
   }
 
-  firebaseAppDistribution {
-    artifactType = "APK"
-    groups = "androidsaastest"
-  }
+//  firebaseAppDistribution {
+//    artifactType = "APK"
+//    groups = "androidsaastest"
+//  }
 
   sourceSets {
     getByName("main").java.srcDir("src/main/kotlin")
@@ -60,9 +60,9 @@ android {
 
 
 dependencies {
-  // MNFST SDK. ":mnfst-dev" provides debug interface
-  //implementation("com.mnfst.saas:sdk:${Versions.Mnfst.VERSION_NAME}")
-  implementation("com.mnfst.saas:sdk-dev:${Versions.Mnfst.VERSION_NAME}")
+  // RFRL SDK. ":sdk-dev" provides debug interface
+  //implementation("ai.rfrl.saas:sdk:${Versions.App.VERSION_NAME}")
+  implementation("ai.rfrl.saas:sdk-dev:${Versions.App.VERSION_NAME}")
 
   // Kotlin
   implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk7:${Versions.Kotlin.LANGUAGE}")

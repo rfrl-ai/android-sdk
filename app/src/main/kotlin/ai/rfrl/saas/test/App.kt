@@ -1,8 +1,8 @@
-package com.mnfst.saas.test
+package ai.rfrl.saas.test
 
+import ai.rfrl.saas.test.util.appModule
+import ai.rfrl.saas.test.util.koinContextModule
 import android.app.Application
-import com.mnfst.saas.test.util.appModule
-import com.mnfst.saas.test.util.koinContextModule
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.get
 import org.koin.core.context.startKoin
@@ -17,7 +17,8 @@ class App : Application(), KoinComponent {
     startKoin {
       printLogger(Level.ERROR)
       modules(koinContextModule(),
-              appModule)
+              appModule
+      )
     }
 
     // Initialization is asynchronous, its safe to do it on app startup

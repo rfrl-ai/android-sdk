@@ -1,7 +1,7 @@
-package com.mnfst.saas.test.util
+package ai.rfrl.saas.test.util
 
+import ai.rfrl.saas.test.SdkRunner
 import android.content.Context
-import com.mnfst.saas.test.SdkRunner
 import org.koin.dsl.module
 
 
@@ -15,7 +15,7 @@ fun Context.koinContextModule() = module {
 
 
 val appModule = module {
-  // Helper to invoke MNFST SDK functions
+  // Helper to invoke RFRL SDK functions
   single {
     SdkRunner(logger = get(),
               config = get(),

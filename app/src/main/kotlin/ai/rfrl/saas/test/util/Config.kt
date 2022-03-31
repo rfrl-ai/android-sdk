@@ -1,7 +1,7 @@
-package com.mnfst.saas.test.util
+package ai.rfrl.saas.test.util
 
+import ai.rfrl.saas.test.ApiConfig
 import android.content.Context
-import com.mnfst.saas.test.ApiConfig
 import com.pocketimps.extlib.toTagged
 
 

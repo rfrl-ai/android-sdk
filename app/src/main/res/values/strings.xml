@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <string name="app_name" translatable="false">MNFST Test</string>
+  <string name="app_name" translatable="false">RFRL SDK Test</string>
 
   <string name="button_api_config_template">Config: %s</string>
   <string name="button_restart">Restart app</string>

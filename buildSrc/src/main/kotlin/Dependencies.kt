@@ -2,8 +2,8 @@
 
 
 object Versions {
-  object Mnfst {
-    const val VERSION_CODE = 17
+  object App {
+    const val VERSION_CODE = 20
     const val VERSION_NAME = "1.2.$VERSION_CODE"
   }
 

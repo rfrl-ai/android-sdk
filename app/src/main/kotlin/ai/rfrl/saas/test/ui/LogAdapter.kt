@@ -1,15 +1,15 @@
-package com.mnfst.saas.test.ui
+package ai.rfrl.saas.test.ui
 
+import ai.rfrl.saas.test.R
+import ai.rfrl.saas.test.util.LogSaver
+import ai.rfrl.saas.test.util.Logger
+import ai.rfrl.saas.test.util.Utils
 import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mnfst.saas.test.R
-import com.mnfst.saas.test.util.LogSaver
-import com.mnfst.saas.test.util.Logger
-import com.mnfst.saas.test.util.Utils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
