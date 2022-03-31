@@ -3,7 +3,7 @@
 
 object Versions {
   object App {
-    const val VERSION_CODE = 20
+    const val VERSION_CODE = 21
     const val VERSION_NAME = "1.2.$VERSION_CODE"
   }
 
