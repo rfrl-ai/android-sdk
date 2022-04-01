@@ -2,9 +2,6 @@ plugins {
   id("com.android.application")
   kotlin("android")
   kotlin("kapt")
-//  google("gms.google-services")
-//  firebase("appdistribution")
-//  firebase("crashlytics")
 }
 
 android {
@@ -23,11 +20,6 @@ android {
 
     setProperty("archivesBaseName", "rfrl-saas-${Versions.App.VERSION_NAME}.${getGitHash()}")
   }
-
-//  firebaseAppDistribution {
-//    artifactType = "APK"
-//    groups = "androidsaastest"
-//  }
 
   sourceSets {
     getByName("main").java.srcDir("src/main/kotlin")
