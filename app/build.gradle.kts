@@ -68,7 +68,6 @@ dependencies {
 
   // Utils
   implementation("io.insert-koin:koin-android:${Versions.Utils.KOIN}")
-  implementation("com.google.firebase:firebase-crashlytics:${Versions.Utils.CRASHLYTICS}")
   implementation("com.jakewharton.timber:timber:${Versions.Utils.TIMBER}")
   implementation("com.jakewharton:process-phoenix:${Versions.Utils.PHOENIX}")
   implementation("com.pocketimps:extlib:${Versions.Utils.EXTLIB}")

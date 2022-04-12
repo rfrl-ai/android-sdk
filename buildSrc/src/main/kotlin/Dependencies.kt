@@ -3,7 +3,7 @@
 
 object Versions {
   object App {
-    const val VERSION_CODE = 21
+    const val VERSION_CODE = 24
     const val VERSION_NAME = "1.2.$VERSION_CODE"
   }
 
@@ -13,8 +13,7 @@ object Versions {
   }
 
   object Build {
-    const val GRADLE_PLUGIN = "7.1.2"
-    const val GMS = "4.3.10"
+    const val GRADLE_PLUGIN = "7.1.3"
     const val R8 = "3.1.51"
   }
 
@@ -33,7 +32,6 @@ object Versions {
 
   object Utils {
     const val KOIN = "3.1.5"
-    const val CRASHLYTICS = "18.2.8"
     const val TIMBER = "5.0.1"
     const val PHOENIX = "2.1.2"
     const val EXTLIB = "1.0.1"
