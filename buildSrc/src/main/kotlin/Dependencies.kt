@@ -3,7 +3,7 @@
 
 object Versions {
   object App {
-    const val VERSION_CODE = 24
+    const val VERSION_CODE = 26
     const val VERSION_NAME = "1.2.$VERSION_CODE"
   }
 
@@ -31,7 +31,7 @@ object Versions {
   }
 
   object Utils {
-    const val KOIN = "3.1.5"
+    const val KOIN = "3.1.6"
     const val TIMBER = "5.0.1"
     const val PHOENIX = "2.1.2"
     const val EXTLIB = "1.0.1"
