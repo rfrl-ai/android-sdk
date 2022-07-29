@@ -70,6 +70,8 @@ class SdkRunner(private val context: Context,
 
       RfrlInitStatus.ERROR_INVALID_TOKEN ->
         return logger.print("FAIL: initialization failed due to invalid RFRL SDK token. Please, contact RFRL team")
+
+      else -> {}
     }
 
     // Plant Timber logger sink to intercept logs from RFRL SDK

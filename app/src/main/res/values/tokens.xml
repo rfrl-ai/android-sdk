@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <!-- Replace with your RFRL SDK -->
-  <string name="token_rfrl" translatable="false">d1c8d749-451e-478d-9521-537b50099a64</string>
+  <string name="token_rfrl" translatable="false">1bbb31a1-e371-4b84-ac60-3b73393f1f5d</string>
 
   <!-- Sandbox token. Use for testing only! -->
-  <string name="token_rfrl_dev" translatable="false">f0dc9489-c913-46e9-8aaa-1392b13b1a41</string>
+  <string name="token_rfrl_dev" translatable="false">1bbb31a1-e371-4b84-ac60-3b73393f1f5d</string>
 </resources>

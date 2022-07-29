@@ -20,6 +20,6 @@ allprojects {
     google()
     mavenCentral()
     maven("https://jitpack.io")
-    maven("https://mnfst-s3-static.s3.eu-central-1.amazonaws.com/saas/repository/")
+    maven("https://rfrl-builds.s3.eu-central-1.amazonaws.com/saas/repository/")
   }
 }
