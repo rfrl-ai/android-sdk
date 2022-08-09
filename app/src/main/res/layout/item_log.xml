@@ -11,4 +11,5 @@
     android:textColorLink="?colorAccent"
     android:autoLink="web"
     android:linksClickable="true"
-    tools:text="Some log entry"/>
+    tools:text="Some log entry"
+    tools:ignore="SmallSp"/>

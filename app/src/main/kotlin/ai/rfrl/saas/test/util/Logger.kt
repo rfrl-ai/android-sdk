@@ -45,7 +45,7 @@ class DefaultLogger : Logger, CoroutineScope {
   }
 
   override fun print(priority: Int, tag: String?, message: String, t: Throwable?) {
-    print((tag?.let { "[$tag]: " } ?: "") + message, t)
+    print((tag?.let { "[$tag]: " }.orEmpty()) + message, t)
   }
 
   override suspend fun collect(collector: FlowCollector<String>) =

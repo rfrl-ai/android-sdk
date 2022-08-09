@@ -14,9 +14,6 @@
   <string name="button_generation">Generate creative</string>
   <string name="button_creative_moderation">Creative moderation…</string>
 
-  <string name="account_review_username_title">Instagram username to review:</string>
-  <string name="account_review_start">Start account review</string>
-
   <string name="message_picker_error">Failed to pick media</string>
   <string name="message_no_storage_permission">Storage permission not granted</string>
 </resources>
