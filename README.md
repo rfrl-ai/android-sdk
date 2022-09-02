@@ -67,7 +67,11 @@ Returns true, if the current user device supports image segmentation.
 
 ### getVersion(): String
 
-Returns RFRL SDK version string. For example: `1.2.21`.
+Returns RFRL SDK version string. For example: `1.2.30`.
+
+### muteErrorMessages: Boolean
+
+Setting this field to `true` will mute all error toasts displayed by SDK.
 
 ## RfrlContext
 

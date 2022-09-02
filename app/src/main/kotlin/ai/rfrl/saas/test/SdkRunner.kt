@@ -103,6 +103,9 @@ class SdkRunner(private val context: Context,
         debug?.setApiEndpoint(context.getString(apiConfig.urlResId))
       }
     }
+
+    // Suppress all error toasts from SDK
+    RfrlSdk.muteErrorMessages = true
   }
 
   // Ensure RFRL context is initialized
