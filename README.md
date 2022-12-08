@@ -9,7 +9,7 @@ SDK library is published to our maven repository and can be added via Gradle:
 // Project level build.gradle.kts
 allprojects {
   repositories {
-    maven("https://mnfst-s3-static.s3.eu-central-1.amazonaws.com/saas/repository/")
+    maven("https://rfrl-builds.s3.eu-central-1.amazonaws.com/saas/repository/")
   }
 }
 
